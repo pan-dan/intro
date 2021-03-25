@@ -97,11 +97,12 @@ public:
 
 	double distance(const Point& other)const
 	{
-		double x_distance = other.x - this->x;
-		double y_distance = other.y - this->y;
+		//double x_distance = other.x - this->x;
+		//double y_distance = other.y - this->y;
 		
-		double distance = sqrt(x_distance * x_distance + y_distance * y_distance);
-			return distance;
+		//double distance = sqrt(x_distance * x_distance + y_distance * y_distance);
+		//	return distance;
+		return	(sqrt ( ( other.x - this->x ) * ( other.x - this->x ) + (other.y - this->y) * (other.y - this->y) ) );
 	
 	}	// sqrt - Square root (квадратный корень)
 
@@ -124,11 +125,12 @@ public:
 
 double distance(const Point& A, const Point& B)
 {
-	double x_distance = A.get_x() - B.get_x();
-	double y_distance = A.get_y() - B.get_y();
+	//double x_distance = A.get_x() - B.get_x();
+	//double y_distance = A.get_y() - B.get_y();
 
-	double distance = sqrt(x_distance * x_distance + y_distance * y_distance);
-	return distance;
+	//double distance = sqrt(x_distance * x_distance + y_distance * y_distance);
+	//return distance;
+	return  (sqrt( ( A.get_x() - B.get_x() ) * ( A.get_x() - B.get_x() ) + ( A.get_y() - B.get_y() ) * ( A.get_y() - B.get_y()  ) ) );
 }
 
 
