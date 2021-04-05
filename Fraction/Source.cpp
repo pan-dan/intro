@@ -102,7 +102,7 @@ public:
 
 	}
 	
-	Fraction(int integer)
+	explicit Fraction(int integer)
 	{
 		this->minus = false;
 		
@@ -209,6 +209,27 @@ public:
 
 
 
+	//			Inrcrement/Decrement
+	Fraction& operator++()
+	{
+		this->integer++;
+		return *this;
+	}
+	Fraction& operator++(int)
+	{
+		Fraction old = *this;
+		this->integer++;
+		return old;
+	}
+	
+	//			Type cast operators
+	operator int()const
+	{
+		return minus ? -integer : integer;
+	}
+
+
+
 	//			Methods
 	Fraction& to_proper()
 	{
@@ -231,6 +252,33 @@ public:
 	
 		return *this;
 	}
+
+	Fraction& reduce() 
+	{
+		if (numerator == 0) return *this;
+		int more, less, rest; // rest - остаток
+
+		// Выясняем кто больше, числитель или знаменатель
+		if (numerator > denominator)more = numerator, less = denominator;
+		else less = numerator, more = denominator;
+
+		// Нахоим наибольший общий делитель
+		do 
+		{
+			rest = more % less;
+			more = less;
+			less = rest;
+
+		} while (rest);
+
+		int GCD = more; // Greatest Common Divisor (Наибольший общий делитель)
+
+		// Собственно, сокращаем дробь
+		numerator /= GCD;
+		denominator /= GCD;
+
+		return *this;
+	}
 };
 
 Fraction operator+(Fraction left, Fraction right)
@@ -245,22 +293,33 @@ Fraction operator+(Fraction left, Fraction right)
 	result.set_integer(left.get_integer() + right.get_integer());
 	result.set_numerator(left.get_numerator() * right.get_denominator() + right.get_numerator() * left.get_denominator());
 	result.set_denominator(left.get_denominator() * right.get_denominator());
-	result.to_proper().get_minus_from_number();
+	result.to_proper().get_minus_from_number().reduce();
 
 	return result;
 }
 
 Fraction operator-(Fraction left, Fraction right)
 {
-	left.to_proper().set_minus_to_number();
+	/*left.to_proper().set_minus_to_number();
 	right.to_proper().set_minus_to_number();
 
-	return Fraction
+	 Fraction result
 	(
 		left.get_integer() - right.get_integer(),
 		left.get_numerator() * right.get_denominator() - right.get_numerator() * left.get_denominator(),
 		left.get_denominator() * right.get_denominator()
-	).to_proper().get_minus_from_number();
+	);
+	 return result.to_proper().get_minus_from_number().reduce();*/
+
+	left.to_improper().set_minus_to_number();
+	right.to_improper().set_minus_to_number();
+
+	return Fraction
+	(
+		left.get_numerator() * right.get_denominator() - right.get_numerator() * left.get_denominator(),
+		left.get_denominator() * right.get_denominator()
+	).to_proper().reduce();
+
 }
 
 Fraction operator*(Fraction left, Fraction right)
@@ -271,7 +330,7 @@ Fraction operator*(Fraction left, Fraction right)
 	(
 		left.get_numerator() * right.get_numerator(),
 		left.get_denominator() * right.get_denominator()
-	).to_proper().get_minus_from_number();
+	).to_proper().get_minus_from_number().reduce();
 	 
 }
 
@@ -288,7 +347,7 @@ Fraction operator/(Fraction left, Fraction right)
 	result.to_proper();
 	if (left.get_minus() || right.get_minus()) result.set_minus(true);
 	if (left.get_minus() && right.get_minus()) result.set_minus(false);
-	return result;
+	return result.reduce();
 
 }
 
@@ -310,6 +369,8 @@ ostream& operator<<(ostream& os, const Fraction& obj)
 
 //#define CONSTRUCTORS_CHECK
 //#define ARITHMETICAL_OPERATORS_CHECK
+//#define COMPAUND_ASSIGMENTS_CHECK
+#define TYPE_CONVERTIONS
 
 void main()
 {
@@ -324,8 +385,12 @@ void main()
 	A.to_improper();
 	cout << A << endl;*/
 
-	Fraction A(2, 3, 4);
+	/*Fraction A(2, 3, 4);
 	Fraction B(5, 6, 7);
+
+	cout << A << endl;
+	cout << B << endl << DEL << endl;*/
+
 
 #ifdef ARITHMETICAL_OPERATORS_CHECK
 	cout << A << tab << B << endl;
@@ -368,6 +433,7 @@ void main()
 	cout << D << endl;
 #endif // CONSTRUCTORS_CHECK
 
+#ifdef COMPAUND_ASSIGMENTS_CHECH
 	A += B;
 	cout << A << endl << DEL << endl;
 	A -= B;
@@ -376,4 +442,78 @@ void main()
 	cout << A << endl << DEL << endl;
 	A /= B;
 	cout << A << endl << DEL << endl;
+#endif // COMPAUND_ASSIGMENTS_CHECH
+
+
+	Fraction reduce(840, 3600);
+	cout << reduce.reduce() << endl;
+	cout << Fraction(27, 9).reduce() << endl;
+
+
+	for (double i = 0.3; i < 10; i++)cout << i << tab;
+	cout << endl << DEL << endl;
+
+	for (Fraction i(1, 2); i.get_integer() < 10; ++i)cout << i << tab;
+	cout << endl << DEL << endl;
+
+	for (Fraction i(1, 2); i.get_integer() < 10; i++)cout << i << tab;
+	cout << endl << DEL << endl;
+
+	cout << typeid(3 + 2.5).name() << endl;
+
+#ifdef TYPE_CONVERTIONS
+	/*
+--------------------------------------
+Type Conversions:
+
+From less to more:
+char --> int
+int --> double
+
+From more to less:			(may cause a loss of data)
+int --> char
+double --> int
+---------------------------------------
+*/
+
+	int a = 2;				// No coversion
+	double b = 2;			// From less to more
+	int c = b;				// From more to less without loosing data
+	double d = 2.5;			// No conversion
+	int e = d;				//From more to less with loosing data
+
+	Fraction A = 5; // Fron other to this. Это преобразование выполняет Single Argument Constructor
+
+	cout << sizeof(int) << endl;
+	cout << sizeof(Fraction) << endl;
+
+	a = A;			// From more to less, Possible loss of data
+
+	cout << sizeof(a) << endl;
+	//Type cast operators
+	/*
+	----------------------------------------- 
+	Type cast operator syntax:
+
+	operator type()
+	{
+		.....
+		.....
+	}
+
+	------------------------------------------
+	*/
+
+
+
+
+
+#endif // TYPE_CONVERTIONS
+
+
+
+
+
+
 }
+
