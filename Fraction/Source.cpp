@@ -10,6 +10,11 @@ using std::cin;
 //#define DEBUG
 #define DEL "--------------------------------------------------------------"
 
+class Fraction;			//Class declaration - объявление класса
+Fraction operator+(Fraction left, Fraction right);	//Прототип оператора +
+Fraction operator-(Fraction left, Fraction right);
+Fraction operator*(Fraction left, Fraction right);
+Fraction operator/(Fraction left, Fraction right);
 
 class Fraction
 {
@@ -164,8 +169,44 @@ public:
 #ifdef DEBUG
 		cout << "Destructor: \t" << this << endl;
 #endif // DEBUG
+	}
+
+
+
+	Fraction& operator=(const Fraction& other)
+	{
+		this->minus = other.minus;
+		this->integer = other.integer;
+		this->numerator = other.numerator;
+		this->denominator = other.denominator;
+#ifdef DEBUG
+		cout << "CopyAssigment:\t" << this << endl;
+#endif // DEBUG
+		return *this;
+	}
+
+	Fraction& operator+=(const Fraction& other)
+	{
+		return *this = *this+other;
 
 	}
+
+	Fraction& operator-=(const Fraction& other)
+	{
+		return *this = *this - other;
+	}
+
+	Fraction& operator*=(const Fraction& other)
+	{
+		return *this = *this * other;
+	}
+
+	Fraction& operator/=(const Fraction& other)
+	{
+		return *this = *this / other;
+
+	}
+
 
 
 	//			Methods
@@ -190,10 +231,6 @@ public:
 	
 		return *this;
 	}
-
-
-
-
 };
 
 Fraction operator+(Fraction left, Fraction right)
@@ -255,24 +292,6 @@ Fraction operator/(Fraction left, Fraction right)
 
 }
 
-//Fraction operator+=(Fraction left, Fraction right)
-//{
-//	left.to_proper();
-//	right.to_proper();
-//
-//	Fraction result;
-//
-//	result.set_integer(left.get_integer() + right.get_integer());
-//	result.set_numerator(left.get_numerator() * right.get_denominator() + right.get_numerator() * left.get_denominator());
-//	result.set_denominator(left.get_denominator() * right.get_denominator());
-//	result.to_proper();
-//	left.set_integer() = result.set_integer();
-//	return left;
-//
-//
-//
-//
-//}
 
 
 ostream& operator<<(ostream& os, const Fraction& obj)
@@ -290,7 +309,7 @@ ostream& operator<<(ostream& os, const Fraction& obj)
 }
 
 //#define CONSTRUCTORS_CHECK
-#define OPERATORS_CHECK
+//#define ARITHMETICAL_OPERATORS_CHECK
 
 void main()
 {
@@ -305,15 +324,10 @@ void main()
 	A.to_improper();
 	cout << A << endl;*/
 
-#ifdef OPERATORS_CHECK
-	double a = 2.7;
-	double b = 3.5;
-	cout << a * b << endl;
+	Fraction A(2, 3, 4);
+	Fraction B(5, 6, 7);
 
-	Fraction A(-2, 3, 4);
-	Fraction B(-5, 6, 7);
-
-
+#ifdef ARITHMETICAL_OPERATORS_CHECK
 	cout << A << tab << B << endl;
 	cout << A << " * " << B << " = " << A * B << endl;
 	cout << A << tab << B << endl;
@@ -337,12 +351,8 @@ void main()
 
 	//cout << A << tab << B << endl;
 	//cout << A << " += " << B << ""; A += B;
-	//cout << A << tab << B << endl;
-
-#endif // OPERATORS_CHECK
-
-	
-
+	//cout << A << tab << B << endl;  
+#endif // ARITHMETICAL_OPERATORS_CHECK
 
 #ifdef CONSTRUCTORS_CHECK
 	Fraction A;		//В таких случаях вызывается коструктор по умолчания(Default constructor)
@@ -358,4 +368,12 @@ void main()
 	cout << D << endl;
 #endif // CONSTRUCTORS_CHECK
 
+	A += B;
+	cout << A << endl << DEL << endl;
+	A -= B;
+	cout << A << endl << DEL << endl;
+	A *= B;
+	cout << A << endl << DEL << endl;
+	A /= B;
+	cout << A << endl << DEL << endl;
 }
