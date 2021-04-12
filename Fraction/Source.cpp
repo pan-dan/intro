@@ -7,7 +7,7 @@ using std::endl;
 using std::cin;
 
 #define tab "\t"
-//#define DEBUG
+#define DEBUG
 #define DEL "--------------------------------------------------------------"
 
 class Fraction;			//Class declaration - объявление класса
@@ -121,6 +121,27 @@ public:
 
 	}
 
+	Fraction(double decimal)
+	{
+		decimal += 1e-10;
+		minus = false;
+		if (decimal < 0)
+		{
+			minus = true;
+			decimal = -decimal;
+		}
+		integer = decimal;
+		decimal -= integer;
+		denominator = 1e+9;
+		numerator = decimal * denominator;
+		reduce();
+
+#ifdef DEBUG
+		cout << "Constructor double: \t" << this << endl;
+#endif // DEBUG
+
+	}
+
 	Fraction(int numerator, int denominator)
 	{
 		this->minus = false;
@@ -223,11 +244,18 @@ public:
 	}
 	
 	//			Type cast operators
-	operator int()const
+	explicit operator int()const
 	{
 		return minus ? -integer : integer;
 	}
 
+	 operator double()const
+	{
+		double number; 
+		number = ((double)get_numerator() / get_denominator()) + get_integer();	
+		
+		return minus ? -number : number;
+	}
 
 
 	//			Methods
@@ -352,6 +380,57 @@ Fraction operator/(Fraction left, Fraction right)
 }
 
 
+bool operator ==(Fraction left, Fraction right)
+{
+	left.to_improper().reduce();
+	right.to_improper().reduce();
+	
+
+	/*if (left.get_numerator() * right.get_denominator() == right.get_numerator() * left.get_denominator())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}*/
+
+	/*if (left.get_numerator() == right.get_numerator() && right.get_denominator() == left.get_denominator())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}*/
+	return left.get_numerator() == right.get_numerator() && right.get_denominator() == left.get_denominator();
+
+}
+
+bool operator!=(const Fraction& left, const Fraction& right)
+{
+	return !(left == right);
+}
+
+bool operator<(const Fraction& left, const Fraction& right)
+{
+	return (double)left < (double)right;
+}
+
+bool operator>(const Fraction& left, const Fraction& right)
+{
+	return (double)left > (double)right;
+}
+
+bool operator>=(const Fraction& left, const Fraction& right)
+{
+	return left > right || left == right;
+}
+
+bool operator<=(const Fraction& left, const Fraction& right)
+{
+	return !(left > right);
+}
 
 ostream& operator<<(ostream& os, const Fraction& obj)
 {
@@ -370,7 +449,9 @@ ostream& operator<<(ostream& os, const Fraction& obj)
 //#define CONSTRUCTORS_CHECK
 //#define ARITHMETICAL_OPERATORS_CHECK
 //#define COMPAUND_ASSIGMENTS_CHECK
-#define TYPE_CONVERTIONS
+//#define TYPE_CONVERTIONS
+//#define INCREMENTS_CHECK
+#define COMPARISON_OPERATORS
 
 void main()
 {
@@ -445,6 +526,7 @@ void main()
 #endif // COMPAUND_ASSIGMENTS_CHECH
 
 
+#ifdef INCREMENTS_CHECK
 	Fraction reduce(840, 3600);
 	cout << reduce.reduce() << endl;
 	cout << Fraction(27, 9).reduce() << endl;
@@ -460,6 +542,8 @@ void main()
 	cout << endl << DEL << endl;
 
 	cout << typeid(3 + 2.5).name() << endl;
+#endif // INCREMENTS_CHECK
+
 
 #ifdef TYPE_CONVERTIONS
 	/*
@@ -476,20 +560,25 @@ double --> int
 ---------------------------------------
 */
 
-	int a = 2;				// No coversion
-	double b = 2;			// From less to more
-	int c = b;				// From more to less without loosing data
-	double d = 2.5;			// No conversion
-	int e = d;				//From more to less with loosing data
+	//int a = 2;				// No coversion
+	//double b = 2;			// From less to more
+	//int c = b;				// From more to less without loosing data
+	//double d = 2.5;			// No conversion
+	//int e = d;				//From more to less with loosing data
 
-	Fraction A = 5; // Fron other to this. Это преобразование выполняет Single Argument Constructor
+	//Fraction A = (Fraction)5; // Fron other to this. Это преобразование выполняет Single Argument Constructor
+	
+	Fraction A(2.3);		//Если конструктор explicit, то его можно вызвать только так
+	
+	cout << "Fraction A = " <<A << endl;
+	//cout << sizeof(int) << endl;
+	//cout << sizeof(Fraction) << endl;
 
-	cout << sizeof(int) << endl;
-	cout << sizeof(Fraction) << endl;
+	//Type cast operator
+	int a = (int)A;			// From more to less, Possible loss of data (operator int)
 
-	a = A;			// From more to less, Possible loss of data
-
-	cout << sizeof(a) << endl;
+	cout << "int a = " << a << endl;
+	
 	//Type cast operators
 	/*
 	----------------------------------------- 
@@ -504,14 +593,77 @@ double --> int
 	------------------------------------------
 	*/
 
+	/*Fraction B(3, 4, 5);
+	cout << B << endl;
+	double b = (double)B;
+	cout << b << endl;
 
+	int c = (int)B;
+	cout << c << endl;*/
 
-
+	Fraction C = 2.3;
+	cout << C << endl;
+	cout << (double)C << endl;
 
 #endif // TYPE_CONVERTIONS
 
+#ifdef COMPARISON_OPERATORS
+
+	Fraction A(1, 2);
+	Fraction B(2, 10);
+
+	//if (A == B)
+	//{
+	//	cout << "                    ___  " << endl;
+	//	cout << "                   /   \\  " << endl;
+	//	cout << "Сходиться         ('<->')   " << endl;
+	//	cout << "             !!!   \\___/   !!!" << endl;
+	//	cout << "             | |____| |____| | " << endl;
+	//	cout << "             (____       ____)" << endl;
+	//	cout << "                  |     |" << endl;
+	//	cout << "                  |     |" << endl;
+	//	cout << "                  |     |" << endl;
+	//	cout << "                  |     |" << endl;
+	//	cout << "                 _|     |_" << endl;
+	//	cout << "                |    |    |" << endl;
+	//	cout << "                |    |    |" << endl;
+	//	cout << "                |____|____|" << endl;
+	//}
+	//else
+	//{
+	//	cout << "                       ___  " << endl;
+	//	cout << "                      /   \\  " << endl;
+	//	cout << "Не Сходиться         ('<->')   " << endl;
+	//	cout << "                !!!   \\___/   !!!" << endl;
+	//	cout << "                | |____| |____| | " << endl;
+	//	cout << "                (____       ____)" << endl;
+	//	cout << "                     |     |" << endl;
+	//	cout << "                     |     |" << endl;
+	//	cout << "                     |     |" << endl;
+	//	cout << "                     |     |" << endl;
+	//	cout << "                    _|     |_" << endl;
+	//	cout << "                   |    |    |" << endl;
+	//	cout << "                   |    |    |" << endl;
+	//	cout << "                   |____|____|" << endl;
+	//}
+
+	cout << A << "  " << B << endl;
+
+	cout << "Strict: \t" << endl;
+	cout << "==  | " << (A == B) << endl;
+	cout << "!=  |" <<(A != B) << endl;
+	cout << "<  |" << (A < B) << endl;
+	cout << ">  |" << (A > B) << endl;
+
+	cout << "Not strict: \t" << endl;
+	cout << ">=  |" << (A >= B) << endl;
+	cout << "<=  |" << (A <= B) << endl;
+	//cout << "Fractions " << (A == B ? "equal" : "differemnt") << endl;
+
+#endif // COMPARISON_OPERATORS
 
 
+	
 
 
 
