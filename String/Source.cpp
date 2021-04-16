@@ -8,6 +8,9 @@ using std::endl;
 
 #define DEL "-------------------------------------------------\n"
 
+class String;
+String operator+(const String& left, const String& right);
+
 class String
 {
 	char* str;		//Указатель на строоку в динамической памяти
@@ -80,6 +83,52 @@ public:
 		return *this;
 	}
 
+	String& operator=(String&& other)
+	{
+		delete[] this->str;
+		
+		this->size = other.size;
+		this->str = other.str;
+		
+		other.str = nullptr;
+		cout << "MoveAssignment:\t\t" << this << endl;
+		
+		return *this;
+	}
+
+	String(String&& other)
+	{
+		this->size = other.size;
+		this->str = other.str;
+		other.str = nullptr;
+		cout << "MoveConstructor: \t" << this << endl;
+	}
+
+	String& operator+=( const String& other)
+	{
+		/*this->size += other.size;
+		char* StrForCopy = new char[this->size]{};
+		strcpy(StrForCopy, this->str);
+
+		delete[] this->str;
+		this->str = StrForCopy;
+	
+		strcat(this->get_str(), other.get_str());
+		return *this;*/
+
+
+		return *this = *this + other;
+
+	}
+
+	const char& operator[](int i)const
+	{
+		return this->str[i];
+	}
+	char& operator[](int i)
+	{
+		return this->str[i];
+	}
 
 	//		Methods
 
@@ -95,15 +144,20 @@ String operator+(const String& left, const String& right)
 {
 	String result(left.get_size() + right.get_size() - 1);
 	
-	for (int i = 0; i < left.get_size(); i++)
+	/*for (int i = 0; i < left.get_size(); i++)
 		//result.get_str()[i] = left.get_str()[i];
 		result[i] = left[i];
 
 	for (int i = 0; i < right.get_size(); i++)
 		//result.get_str()[i + left.get_size() - 1] = right.get_str()[i];
-		result[i + left.get_size() - 1] = right[i];
+		result[i + left.get_size() - 1] = right[i];*/
+
+	strcpy(result.get_str(), left.get_str());//выполняет копирование строки left в строку result
+	strcat(result.get_str(), right.get_str());//выполняет конкатенацию строки right в строку result
+
 	return result;
 }
+ 
 
 ostream& operator<<(ostream& os, const String& obj)
 {
@@ -151,14 +205,17 @@ void main()
 
 #endif // ASSIGMENT_CHECK
 
-	String str1 = "Hello";
+	String str1 = "Hello ";
 	String str2 = "Wolrd";
+
 	cout << DEL;
-	String str3 = str1 + " " + str2;	//Оператор + будет выполнять конкатенацию (слияние) строк
+	String str3;
+	str3 = str1 /*+ " "*/ + str2;	//Оператор + будет выполнять конкатенацию (слияние) строк
 	cout << DEL;
 	cout << str3 << endl;
 
-
+	/*str1 += str2;
+	cout << str1 << endl;*/
 
 
 }
