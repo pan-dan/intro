@@ -8,8 +8,78 @@ using std::endl;
 
 #define DEL "-------------------------------------------------\n"
 
+//class Binary;
+
 class String;
 String operator+(const String& left, const String& right);
+
+//class Binary
+//{
+//	char* str10;
+//	int size10;
+//
+//public:
+//
+//
+//
+//	const char* get_str10()const
+//	{
+//		return str10;
+//	}
+//
+//	char* get_str10()
+//	{
+//		return str10;
+//	}
+//
+//	int get_size10()const
+//	{
+//		return size10;
+//	}
+//
+//
+//	//		Constructors
+//
+//	explicit Binary(int size = 80)
+//	 {
+//		this->size10 = size;
+//		this->str10 = new char[size] {};
+//		cout << (size == 80 ? "Default" : "Size") << "Constructor: \t" << this << endl;
+//	}
+//
+//	Binary(const char* str10)
+//	{
+//		this->size10 = strlen(str10) + 1;
+//		this->str10 = new char[size10] {};
+//		strcpy(this->str10, str10);			//String copy	
+//		//strcpy_s(this->str, size, str);
+//		cout << "Constructor: \t\t" << this << endl;
+//	}
+//
+//	Binary(const Binary& other)
+//	{
+//		this->size10 = other.size10;
+//		this->str10 = new char[size10] {};
+//		strcpy(this->str10, other.str10);
+//		cout << "CopyConstractor:\t" << this << endl;
+//	}
+//
+//	~Binary()
+//	{
+//		delete[] this->str10;
+//		cout << "Destructor: \t\t" << this << endl;
+//	}
+//
+//
+//	//		Methods
+//
+//	void print()const
+//	{
+//		cout << "str10: \t" << str10 << endl;
+//		cout << "size10 \t" << size10 << endl;
+//	}
+//};
+
 
 class String
 {
@@ -36,27 +106,27 @@ public:
 
 	//		Constructors
 
-	explicit String(int size = 80)
+	explicit String(int size = 80) :size(size), str(new char[size] {})
 	{
-		this->size = size;
-		this->str = new char[size] {};
+		//this->size = size;
+		//this->str = new char[size] {};
 		cout << (size == 80? "Default" : "Size")<< "Constructor: \t" << this << endl;
 	}
 
-	String(const char* str)
-	{
-		this->size = strlen(str) + 1;
-		this->str = new char[size] {};
-		strcpy(this->str, str);			//String copy	
+	String(const char* str) : String (strlen(str)+1)		//Делегирование коструктора с одним параметром типа int
+	{														//для того, чтобы он выделил память
+		//this->size = strlen(str) + 1;
+		//this->str = new char[size] {};
+		strcpy(this->str, str);				//String copy	
 		//strcpy_s(this->str, size, str);
 		cout << "Constructor: \t\t" << this << endl;
 	}
 
-	String(const String& other)
+	String(const String& other):String(other.str)
 	{
-		this->size = other.size;
-		this->str = new char[size] {};
-		strcpy(this->str, other.str);
+		//this->size = other.size;
+		//this->str = new char[size] {};
+		//strcpy(this->str, other.str);
 		cout << "CopyConstractor:\t" << this << endl;
 	}
 
@@ -96,10 +166,10 @@ public:
 		return *this;
 	}
 
-	String(String&& other)
+	String(String&& other) : size(other.size), str(other.str)
 	{
-		this->size = other.size;
-		this->str = other.str;
+		//this->size = other.size;
+		//this->str = other.str;
 		other.str = nullptr;
 		cout << "MoveConstructor: \t" << this << endl;
 	}
@@ -134,8 +204,8 @@ public:
 
 	void print()const
 	{
-		cout << "str: \t" << str << endl;
 		cout << "size \t" << size << endl;
+		cout << "str: \t" << str << endl;
 	}
 
 };
@@ -168,6 +238,7 @@ ostream& operator<<(ostream& os, const String& obj)
 
 //#define CONSTRUCTORS_CHECK
 //#define ASSIGMENT_CHECK
+//#define OPERATOR_PLUS_CHECK
 
 void main()
 {
@@ -205,6 +276,7 @@ void main()
 
 #endif // ASSIGMENT_CHECK
 
+#ifdef OPERATOR_PLUS_CHECK
 	String str1 = "Hello ";
 	String str2 = "Wolrd";
 
@@ -216,6 +288,31 @@ void main()
 
 	/*str1 += str2;
 	cout << str1 << endl;*/
+#endif // OPERATOR_PLUS_CHECK
+
+	String str1;			//Default Constructor
+	str1.print();
+	String str2 = "Hello"; //Single Argument Constructer
+	str2.print();
+	String str3("World");	//Single Argument Constructer
+	str3.print();
+	String str4(void);		//Объявление функции str4, которая ничего не принимает,
+							//и возвращает значение типа string
+							//String str4(); НЕ вызывает конструктор по умолчанию
+	
+	String str5{};			//явно вызывается конструктор по умолчанию			
+	str5.print();
+	String str6{ 7 };
+	str6.print();
+	String str7{ "Привет" };
+	str7.print();
+
+	String str8 = str7;
+	str8.print();
+	cout << DEL << endl;
+	cout << str2 + str3 << endl;
+	cout << DEL << endl;
+
 
 
 }
