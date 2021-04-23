@@ -1,42 +1,42 @@
 #include "Fraction.h"
 
-bool get_minus()const
+bool Fraction::get_minus()const
 {
 	return minus;
 }
-int get_integer()const
+int Fraction::get_integer()const
 {
 	return integer;
 }
-int get_numerator()const
+int Fraction::get_numerator()const
 {
 	return numerator;
 }
-int get_denominator()const
+int Fraction::get_denominator()const
 {
 	return denominator;
 }
 
-void set_minus(bool minus)
+void Fraction::set_minus(bool minus)
 {
 	this->minus = minus;
 }
-void set_integer(int integer)
+void Fraction::set_integer(int integer)
 {
 	this->integer = integer;
 }
-void set_numerator(int numerator)
+void Fraction::set_numerator(int numerator)
 {
 	this->numerator = numerator;
 }
-void set_denominator(int denominator)
+void Fraction::set_denominator(int denominator)
 {
 	if (denominator == 0) denominator = 1;
 	this->denominator = denominator;
 }
 
 ///////////////////////////////////////////////////////
-Fraction& set_minus_to_number()
+Fraction& Fraction::set_minus_to_number()
 {
 	if (minus)
 	{
@@ -46,7 +46,7 @@ Fraction& set_minus_to_number()
 	}
 	return *this;
 }
-Fraction& get_minus_from_number()
+Fraction& Fraction::get_minus_from_number()
 {
 	if (integer < 0)
 	{
@@ -63,7 +63,7 @@ Fraction& get_minus_from_number()
 
 //CONSTRUCTORS
 
-Fraction()					//Default consturctor
+Fraction::Fraction()					//Default consturctor
 {
 	this->minus = false;
 
@@ -76,7 +76,7 @@ Fraction()					//Default consturctor
 
 }
 
-explicit Fraction(int integer)
+Fraction::Fraction(int integer)
 {
 	this->minus = false;
 
@@ -95,7 +95,7 @@ explicit Fraction(int integer)
 
 }
 
-Fraction(double decimal)
+Fraction::Fraction(double decimal)
 {
 	decimal += 1e-10;
 	minus = false;
@@ -116,7 +116,7 @@ Fraction(double decimal)
 
 }
 
-Fraction(int numerator, int denominator)
+Fraction::Fraction(int numerator, int denominator)
 {
 	this->minus = false;
 
@@ -135,7 +135,7 @@ Fraction(int numerator, int denominator)
 
 }
 
-Fraction(int integer, int numerator, int denominator)
+Fraction::Fraction(int integer, int numerator, int denominator)
 {
 	this->minus = false;
 
@@ -159,7 +159,7 @@ Fraction(int integer, int numerator, int denominator)
 
 }
 
-~Fraction()
+Fraction::~Fraction()
 {
 #ifdef DEBUG
 	cout << "Destructor: \t" << this << endl;
@@ -168,7 +168,7 @@ Fraction(int integer, int numerator, int denominator)
 
 
 
-Fraction& operator=(const Fraction& other)
+Fraction& Fraction::operator=(const Fraction& other)
 {
 	this->minus = other.minus;
 	this->integer = other.integer;
@@ -180,23 +180,23 @@ Fraction& operator=(const Fraction& other)
 	return *this;
 }
 
-Fraction& operator+=(const Fraction& other)
+Fraction& Fraction::operator+=(const Fraction& other)
 {
 	return *this = *this + other;
 
 }
 
-Fraction& operator-=(const Fraction& other)
+Fraction& Fraction::operator-=(const Fraction& other)
 {
 	return *this = *this - other;
 }
 
-Fraction& operator*=(const Fraction& other)
+Fraction& Fraction::operator*=(const Fraction& other)
 {
 	return *this = *this * other;
 }
 
-Fraction& operator/=(const Fraction& other)
+Fraction& Fraction::operator/=(const Fraction& other)
 {
 	return *this = *this / other;
 
@@ -205,12 +205,12 @@ Fraction& operator/=(const Fraction& other)
 
 
 //			Inrcrement/Decrement
-Fraction& operator++()
+Fraction& Fraction::operator++()
 {
 	this->integer++;
 	return *this;
 }
-Fraction& operator++(int)
+Fraction& Fraction::operator++(int)
 {
 	Fraction old = *this;
 	this->integer++;
@@ -218,12 +218,12 @@ Fraction& operator++(int)
 }
 
 //			Type cast operators
-explicit operator int()const
+Fraction::operator int()const
 {
 	return minus ? -integer : integer;
 }
 
-operator double()const
+Fraction::operator double()const
 {
 	double number;
 	number = ((double)get_numerator() / get_denominator()) + get_integer();
@@ -233,7 +233,7 @@ operator double()const
 
 
 //			Methods
-Fraction& to_proper()
+Fraction& Fraction::to_proper()
 {
 	/*if (integer >= 0) integer += numerator / denominator;
 	else integer -= numerator / denominator;*/
@@ -246,7 +246,7 @@ Fraction& to_proper()
 	return *this;
 }
 
-Fraction& to_improper()
+Fraction& Fraction::to_improper()
 {
 	get_minus_from_number();
 	numerator += integer * denominator;
@@ -255,7 +255,7 @@ Fraction& to_improper()
 	return *this;
 }
 
-Fraction& reduce()
+Fraction& Fraction::reduce()
 {
 	if (numerator == 0) return *this;
 	int more, less, rest; // rest - остаток
