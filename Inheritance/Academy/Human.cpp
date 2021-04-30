@@ -66,6 +66,7 @@
 		cout << last_name << " " << first_name << ", " << age << " лет" << endl;
 	}
 
-
-
-
+	ostream& operator<<(ostream& os, const Human& obj)
+	{
+		return os << obj.get_last_name() << " " << obj.get_first_name() << ", " << obj.get_age() << " лет";
+	}

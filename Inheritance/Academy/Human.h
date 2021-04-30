@@ -37,3 +37,5 @@ public:
 	//			Methods
 	virtual void info()const;
 };
+
+ostream& operator <<(ostream& os, const Human& obj);

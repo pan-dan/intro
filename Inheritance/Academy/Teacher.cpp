@@ -48,3 +48,8 @@
 
 	}
 
+	ostream& operator<<(ostream& os, const Teacher& obj)
+	{
+		os << (Human)obj << ", ";
+		return os << obj.get_speciality() << ", опыт предподавания " << obj.get_experiance() << " лет";
+	}

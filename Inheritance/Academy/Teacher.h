@@ -32,4 +32,4 @@ public:
 
 };
 
-
+ostream& operator<<(ostream& os, const Teacher& obj);

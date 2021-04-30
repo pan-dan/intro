@@ -68,3 +68,8 @@
 		cout << university << ", " << speciality << ", " << group << ", успеваемость: " << rating << ", " << endl;
 	}
 
+	ostream& operator<<(ostream& os, const Student& obj)
+	{
+		
+		return os << (Human)obj << ", " <<  obj.get_university() << ", " << obj.get_speciality() << ", " << obj.get_group() << ", " << obj.get_rating();
+	}

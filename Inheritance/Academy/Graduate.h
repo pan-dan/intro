@@ -33,5 +33,5 @@ public:
 
 };
 
-
+ostream& operator<< (ostream& os, const Graduate& obj);
 

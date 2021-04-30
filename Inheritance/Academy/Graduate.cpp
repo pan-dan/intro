@@ -47,7 +47,11 @@
 		cout << diploma << " диплом, " << "тема проекта: " << topic << "." << endl;
 	}
 
-
+	ostream& operator<< (ostream& os, const Graduate& obj)
+	{
+		
+		return os << (Student)obj << obj.get_diploma() << " диплом, " << obj.get_topic();
+	}
 
 
 

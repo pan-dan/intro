@@ -43,3 +43,5 @@ public:
 
 
 };
+
+ostream& operator<<(ostream& os, const Student& obj);
