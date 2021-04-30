@@ -1,4 +1,5 @@
 #include "Distributed.h"
+#include "Teacher.h"
 
 	const string& Teacher::get_speciality()const
 	{

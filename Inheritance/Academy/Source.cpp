@@ -1,4 +1,8 @@
 #include "Distributed.h"
+#include "Human.h"
+#include "Student.h"
+#include "Teacher.h"
+#include "Graduate.h"
 
 
 //#define INHERITANCE_CHECK

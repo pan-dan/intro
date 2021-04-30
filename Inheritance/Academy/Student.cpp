@@ -1,4 +1,5 @@
 #include "Distributed.h"
+#include "Student.h"
 
 
 	
