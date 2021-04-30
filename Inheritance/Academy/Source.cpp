@@ -8,15 +8,15 @@ using std::endl;
 using std::cin;
 
 
-#define DEL "--------------------------------------------------------"
+#define DEL "--------------------------------------------------------" 
 
-#define HUMAN_TAKE_PARAMETERS		const string& last_name, const string& first_name, unsigned int age
-#define STUDENT_GET_PARAMETERS		const string& university, const string& speciality, const string& group, double rating	
-#define TEACHER_GET_PARAMETERS		const string& speciality, unsigned int experiance
+#define HUMAN_TAKE_PARAMETERS const string& last_name, const string& first_name, unsigned int age
+#define STUDENT_TAKE_PARAMETERS	const string& university, const string& speciality, const string& group, double rating	
+#define TEACHER_TAKE_PARAMETERS	const string& speciality, unsigned int experiance
 
-#define HUMAN_GIVE_PARAMETERS		last_name, first_name,age
-#define STUDENT_GIVE_PARAMETERS		university,speciality,group,rating
-#define TEACHER_GIVE_PARAMETERS		speciality, experience
+#define HUMAN_GIVE_PARAMETERS last_name, first_name,age
+#define STUDENT_GIVE_PARAMETERS university,speciality,group,rating
+#define TEACHER_GIVE_PARAMETERS speciality, experience
 
 
 class Human
@@ -74,7 +74,7 @@ public:
 		cout << "HConstructor:\t" << this << endl;
 	}
 
-	~Human()
+	virtual ~Human()
 	{
 		cout << "HDestructor:\t" << this << endl;
 	}
@@ -82,7 +82,7 @@ public:
 
 
 	//			Methods
-	void info()const
+	virtual void info()const
 	{
 		//cout << "Last name: " << last_name << endl;
 		//cout << "First name: " << first_name << endl;
@@ -142,7 +142,7 @@ public:
 	Student
 	(
 	HUMAN_TAKE_PARAMETERS,							// Атрибуты базового класса
-	STUDENT_GET_PARAMETERS			// Атрибуты нашего класса
+	STUDENT_TAKE_PARAMETERS			// Атрибуты нашего класса
 	):Human(HUMAN_GIVE_PARAMETERS)
 	{
 		set_university(university);
@@ -202,7 +202,7 @@ public:
 	Teacher
 	(
 		HUMAN_TAKE_PARAMETERS,
-		TEACHER_GET_PARAMETERS
+		TEACHER_TAKE_PARAMETERS
 	):Human(HUMAN_GIVE_PARAMETERS)
 	{
 		set_speciality(speciality);
@@ -258,7 +258,7 @@ public:
 	Graduate
 	(
 		HUMAN_TAKE_PARAMETERS,
-		STUDENT_GET_PARAMETERS,
+		STUDENT_TAKE_PARAMETERS,
 		const string& diploma, const string& topic
 	):Student(HUMAN_GIVE_PARAMETERS,STUDENT_GIVE_PARAMETERS), diploma(diploma), topic(topic)
 	{
@@ -283,7 +283,7 @@ public:
 };
 
 
-#define INHERITANCE_CHECK
+//#define INHERITANCE_CHECK
 
 void main()
 {
@@ -305,5 +305,34 @@ cout << DEL << endl;*/
 		"BV_011", 80, "Красный", "Распространение кокаина");
 	Tony.info();
 #endif // INHERITANCE_CHECK
+
+
+		//Polymorphism
+
+	Human* group[] =
+	{
+		new Student("Батодалаев", "Даши", 16, "StepA","РПО", "PD_011",5),
+		new Student("Загидуллин", "Линар", 32, "StepA", "РПО", "PD_011", 5),
+		new Graduate("Шугани", "Сергей", 15, "StepA", "РПО", "PD_011", 5, "Красный", "Защита персональных данных"),
+		new Teacher("Einstein", "Albert", 141, "Atrophisics", 110),
+		new Student("Маркин", "Даниил", 17, "StepA", "РПО", "BV_011", 5),
+		new Teacher("Richter", "Jeffrie", 45, "Windows development", 20)
+
+	};
+
+	cout << sizeof(group) << endl;
+	//2) Specialization
+	cout << DEL << endl;
+	for (int i = 0; i < sizeof(group)/sizeof(Human*); i++)
+	{
+		group[i]->info();
+		cout << DEL << endl;
+	}
+
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		delete group[i];
+	}
+
 
 }
