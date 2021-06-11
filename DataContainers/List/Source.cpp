@@ -17,7 +17,7 @@ class List
 		int Data;		//Значение элемента
 		Element* pNext;	//Указатель на следующий элемент
 		Element* pPrev;	//Указатель на предыдущий элемент
-	
+
 	public:
 		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
 		{
@@ -43,12 +43,45 @@ class List
 	Element* Tail;		// Указатель на конечный элемент списка
 	unsigned int size;	//Размер списка
 
-public:
-	class Iterator
+	class BaseIterator
 	{
+	protected:
 		Element* Temp;
+
 	public:
-		Iterator(Element* Temp = nullptr) :Temp(Temp)
+
+		BaseIterator(Element* Temp = nullptr) :Temp(Temp)
+		{
+#ifdef DEBUG
+			cout << "BIConstructor:\t" << this << endl;
+#endif // DEBUG
+
+		}
+		~BaseIterator()
+		{
+#ifdef DEBUG
+			cout << "BIDestructor:\t" << this << endl;
+#endif // DEBUG
+
+		}
+
+		const int& operator*()const
+		{
+			return Temp->Data;
+		}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+
+	};
+
+public:
+	class Iterator :public BaseIterator
+	{
+
+	public:
+		Iterator(Element* Temp = nullptr) :BaseIterator(Temp)
 		{
 #ifdef DEBUG
 			cout << "ITConstructor: \t" << this << endl;
@@ -62,8 +95,8 @@ public:
 #endif // DEBUG
 		}
 
-		
-		Iterator& operator++()
+
+		Iterator& operator++()		//Prefix increment
 		{
 			Temp = Temp->pNext;
 			return *this;
@@ -95,27 +128,27 @@ public:
 			return this->Temp != other.Temp;
 		}
 
-		const int& operator*()const
-		{
-			return Temp->Data;
-		}
-		int& operator*()
-		{
-			return Temp->Data;
-		}
+
 
 	};
-	class ReverseIterator
+
+	class ReverseIterator :public BaseIterator
 	{
-		Element* Temp;
+
 	public:
-		ReverseIterator(Element* Temp = nullptr):Temp(Temp)
+		ReverseIterator(Element* Temp = nullptr) :BaseIterator(Temp)
 		{
+#ifdef DEBUG
 			cout << "RIConstructor:\t" << this << endl;
+#endif // DEBUG
+
 		}
 		~ReverseIterator()
 		{
+#ifdef DEBUG
 			cout << "RIDestructor:\t" << this << endl;
+#endif // DEBUG
+
 		}
 
 		ReverseIterator& operator++()
@@ -149,16 +182,10 @@ public:
 		{
 			return this->Temp != other.Temp;
 		}
-		
-		const int& operator*()const
-		{
-			return Temp->Data;
-		}
-		int& operator*()
-		{
-			return Temp->Data;
-		}
+
+
 	};
+
 	size_t getSize()const
 	{
 		return size;
@@ -187,7 +214,10 @@ public:
 	{
 		Head = Tail = nullptr;
 		size = 0;
+#ifdef DEBUG
 		cout << "LConstructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	explicit List(int size) :List()
 	{
@@ -202,7 +232,10 @@ public:
 	{
 		//while (Head)pop_front();
 		//while (Tail)pop_back();
+#ifdef DEBUG
 		cout << "LDestructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 
 	//		Operators
@@ -218,12 +251,12 @@ public:
 		else
 		{
 			Temp = Tail;
-			for (size_t i = 0; i < size - index-1; i++)Temp = Temp->pPrev;
+			for (size_t i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
 		}
 		return Temp->Data;
-		
-	
-	
+
+
+
 	}
 
 
@@ -241,7 +274,7 @@ public:
 		New->pNext=Head;
 		Head->pPrev = New;
 		Head = New;*/
-		
+
 		Head = Head->pPrev = new Element(Data, Head);
 		size++;
 	}
@@ -260,7 +293,7 @@ public:
 		Tail = New;*/
 
 
-		Tail = Tail->pNext = new Element(Data, nullptr,Tail);
+		Tail = Tail->pNext = new Element(Data, nullptr, Tail);
 		size++;
 
 
@@ -283,29 +316,29 @@ public:
 		if (Index < size / 2)
 		{
 			Temp = Head;
-			for (size_t i = 0; i < Index; i++)Temp = Temp->pNext;		
+			for (size_t i = 0; i < Index; i++)Temp = Temp->pNext;
 		}
 		else
 		{
 			Temp = Tail;
 			for (size_t i = 0; i < size - Index; i++)Temp = Temp->pPrev;
 		}
-			/*Element* New = new Element(Data);
-			New->pNext = Temp;
-			New->pPrev = Temp->pPrev;
-			Temp->pPrev->pNext = New;
-			Temp->pPrev = New;*/
-	
+		/*Element* New = new Element(Data);
+		New->pNext = Temp;
+		New->pPrev = Temp->pPrev;
+		Temp->pPrev->pNext = New;
+		Temp->pPrev = New;*/
 
 
-			Temp->pPrev = Temp->pPrev->pNext =new Element(Data,Temp,Temp->pPrev);
-			size++;
+
+		Temp->pPrev = Temp->pPrev->pNext = new Element(Data, Temp, Temp->pPrev);
+		size++;
 	}
 
 	//		Erasing Elements
 	void pop_front()
 	{
-		if(Head == Tail)
+		if (Head == Tail)
 		{
 			delete Head;
 			Head = Tail = nullptr;
@@ -341,13 +374,13 @@ public:
 			pop_front();
 			return;
 		}
-		if (index == size-1)
+		if (index == size - 1)
 		{
 			pop_back();
 			return;
 		}
 		if (index >= size)return;
-		
+
 
 		Element* Temp;
 		if (index < size / 2)
@@ -355,10 +388,10 @@ public:
 			Temp = Head;
 			for (size_t i = 0; i < index; i++)Temp = Temp->pNext;
 		}
-		else 
+		else
 		{
 			Temp = Tail;
-			for (size_t i = 0; i< size - index - 1; i++)Temp = Temp->pPrev;
+			for (size_t i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
 		}
 		// 1) Исклюючаемый удаляемый элемент из списка
 		Temp->pPrev->pNext = Temp->pNext;		// в указатель pNext элемента Temp->pPrev записываем адрес Temp->pNext
@@ -371,7 +404,7 @@ public:
 	//		Methods
 	void print()
 	{
-		for (Element* Temp = Head; Temp; Temp = Temp->pNext )
+		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 		{
 			cout << Temp << tab << Temp->pPrev << tab << Temp->Data << tab << Temp->pNext << endl;
 		}
@@ -381,7 +414,7 @@ public:
 
 	void print_reverse()
 	{
-		for (Element* Temp =Tail; Temp; Temp = Temp->pPrev)
+		for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
 		{
 			cout << Temp << tab;
 			cout << Temp->pPrev << tab << Temp->Data << tab << Temp->pNext << endl;
