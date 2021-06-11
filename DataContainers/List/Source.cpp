@@ -65,6 +65,15 @@ class List
 
 		}
 
+		bool operator==(const BaseIterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const BaseIterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+
 		const int& operator*()const
 		{
 			return Temp->Data;
@@ -119,16 +128,14 @@ public:
 			return old;
 		}
 
-		bool operator==(const Iterator& other)const
+		/*bool operator==(const Iterator& other)const
 		{
 			return this->Temp == other.Temp;
 		}
 		bool operator!=(const Iterator& other)const
 		{
 			return this->Temp != other.Temp;
-		}
-
-
+		}*/
 
 	};
 
@@ -174,14 +181,14 @@ public:
 			return old;
 		}
 
-		bool operator==(const ReverseIterator& other)const
+		/*bool operator==(const ReverseIterator& other)const
 		{
 			return this->Temp == other.Temp;
 		}
 		bool operator!=(const ReverseIterator& other)const
 		{
 			return this->Temp != other.Temp;
-		}
+		}*/
 
 
 	};
