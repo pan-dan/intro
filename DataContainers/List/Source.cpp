@@ -202,7 +202,16 @@ public:
 	{
 		return Head;
 	}
+	Iterator begin()const
+	{
+		return Head;
+	}
+
 	Iterator end()
+	{
+		return nullptr;
+	}
+	Iterator end() const
 	{
 		return nullptr;
 	}
@@ -232,8 +241,13 @@ public:
 	}
 	List(const initializer_list<int>& il) :List()
 	{
-		cout << typeid(il.begin()).name() << endl;
+		//cout << typeid(il.begin()).name() << endl;
 		for (int const* it = il.begin(); it != il.end(); it++) push_back(*it);
+	}
+	List(const List& other) :List()
+	{
+		for (int i : other)push_back(i);
+		cout << "CopyConstructor:\t" << this << endl;
 	}
 	~List()
 	{
@@ -246,6 +260,14 @@ public:
 	}
 
 	//		Operators
+
+	List& operator=(const List& other)
+	{
+		if (this == &other)return *this;
+		while (Head)pop_front();
+		for (int i : other)push_back(i);
+		cout << "CopyAssigment:\t" << this << endl;
+	}
 
 	int& operator[](size_t index)
 	{
@@ -433,15 +455,17 @@ public:
 };
 
 
+
 //#define BASE_CHECK
 //#define SIZE_CONSTRUCTOR_AND_INDEX_OPERATOR
+//#define ITERATORS_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "Rus");
-
-	int n;
-	cout << "ВВедите размер списка:"; cin >> n;
+	
+	//int n;
+	//cout << "ВВедите размер списка:"; cin >> n;
 
 #ifdef BASE_CHECK
 	List list;
@@ -483,6 +507,7 @@ void main()
 #endif // SIZE_CONSTRUCTOR_AND_INDEX_OPERATOR
 
 
+#ifdef ITERATORS_CHECK
 	List list = { 3, 5, 8, 13, 21 };
 	list.print();
 
@@ -504,7 +529,14 @@ void main()
 		cout << *it << tab;
 	}
 	cout << endl;
+#endif // ITERATORS_CHECK
 
+	List list1 = { 3, 5, 8, 13, 21 };
+	list1.print();
+	//List list2 = list1;		//CopyConstructor
+	List list2;
+	list2 = list1;
+	list2.print();
 
 }
 

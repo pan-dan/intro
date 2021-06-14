@@ -121,7 +121,15 @@ public:
 	{
 		return Head;
 	}
+	const Iterator begin()const
+	{
+		return Head;
+	}
 	Iterator end()
+	{
+		return nullptr;
+	}
+	const Iterator end()const
 	{
 		return nullptr;
 	}
