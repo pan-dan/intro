@@ -7,7 +7,8 @@ using std::endl;
 
 #define DEL "---------------------------------------------------------------------"
 #define tab "\t\t"
-//#define DEBUG
+
+#define DEBUG
 
 class List
 {
@@ -239,6 +240,7 @@ public:
 	{
 		while (size--)push_back(0);
 	}
+	
 	List(const initializer_list<int>& il) :List()
 	{
 		//cout << typeid(il.begin()).name() << endl;
@@ -249,6 +251,18 @@ public:
 		for (int i : other)push_back(i);
 		cout << "CopyConstructor:\t" << this << endl;
 	}
+
+	List(List&& other)
+	{
+		this->size = other.size;
+		this->Head = other.Head;
+		this->Tail = other.Tail;
+
+		other.Head = other.Tail = nullptr;
+
+		cout << "MoveConstructor:\t" << this << endl;
+	}
+
 	~List()
 	{
 		//while (Head)pop_front();
@@ -267,6 +281,19 @@ public:
 		while (Head)pop_front();
 		for (int i : other)push_back(i);
 		cout << "CopyAssigment:\t" << this << endl;
+	}
+
+	List& operator=(List&& other)
+	{
+		while (Head)pop_front();
+		this->size = other.size;
+		this->Head = other.Head;
+		this->Tail = other.Tail;
+
+		other.Head = other.Tail = nullptr;
+
+		cout << "MoveAssigment:\t" << this << endl;
+		return *this;
 	}
 
 	int& operator[](size_t index)
@@ -549,7 +576,12 @@ void main()
 
 	List list1 = { 3, 5, 8, 13, 21 };
 	List list2 = { 34, 55, 89 };
-	(list1 + list2).print();
+	cout << DEL << endl;
+	//List list3 = list1 + list2;		//MoveConstructor
+	List list3;
+	list3 = list2 + list1;				//MoveAssigment
+	cout << DEL << endl;
+	list3.print();
 }
 
 
